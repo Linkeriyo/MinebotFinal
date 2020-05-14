@@ -6,7 +6,7 @@ El increible bot de minecrafters! (benito)
 
 Se invocan escribiendo [prefijo] <comando> en un chat de texto al que el bot tenga acceso.
 
-### [prefijo] adios
+### adios
 
 Kickea a una o varias personas del servidor mencionadas (no funciona contra carepichas).
 Sin argumentos kickea a quién haya escrito el mensaje
@@ -14,28 +14,28 @@ Sin argumentos kickea a quién haya escrito el mensaje
 Uso: `[prefijo] adios <miembros>`
 
 
-### [prefijo] carro
+### carro
 
 Te responde con un carro aleatorio.
 
 Uso: `[prefijo] carro`
 
 
-### [prefijo] circuito
+### circuito
 
 Te responde con un circuito aleatorio.
 
 Uso: `[prefijo] circuito`
 
 
-### [prefijo] tiempos
+### tiempos
 
 Da acceso a la lista de tiempos de minecrafters.
 
 Uso: `[prefijo] tiempos <add/show>`
 
 
-### [prefijo] ruleta
+### ruleta
 
 Pregunta y responde si un carepicha aleatorio es el próximo en irse de minecrafters.
 
