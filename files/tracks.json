@@ -1,0 +1,14 @@
+{
+    "track": [
+        {
+            "id": "nordschleife_tourist",
+            "name": "Nordschleife Turista",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/Nordschleife-bgr02.jpg"
+        },
+        {
+            "id": "monza",
+            "name": "Monza",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/monza-bgr01.jpg"
+        }
+    ]
+}

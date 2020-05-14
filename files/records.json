@@ -1,0 +1,28 @@
+{
+    "record": [
+        {
+            "trackId": "nordschleife_tourist",
+            "time": "6:45:234",
+            "authorId": "154268434090164226",
+            "carId": "ferrarif40"
+        },
+        {
+            "trackId": "monza",
+            "time": "1:23:567",
+            "authorId": "263454327530717195",
+            "carId": "audir8v10plus"
+        },
+        {
+            "trackId": "monza",
+            "time": "1:32:342",
+            "authorId": "154268434090164226",
+            "carId": "ferrarif40"
+        },
+        {
+            "trackId": "monza",
+            "time": "1:32:342",
+            "authorId": "154268434090164226",
+            "carId": "ferrarif40"
+        }
+    ]
+}

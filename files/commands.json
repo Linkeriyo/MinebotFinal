@@ -1,0 +1,28 @@
+{
+    "command": [
+        {
+            "keyword": "carro",
+            "help": "escribir `iyo carro` te responde con un carro aleatorio de puta madre"
+        },
+        {
+            "keyword": "circuito",
+            "help": "escribir `iyo circuito` te responde con un circuito aleatorio de puta madre"
+        },
+        {
+            "keyword": "tiempos",
+            "help": "escribir `iyo tiempos` te permite guardar y ver tiempos en los circuitos y coches válidos"
+        },
+        {
+            "keyword": "ruleta",
+            "help": "escribir `iyo ruleta` elige al próximo carepicha en irse de minecrafters"
+        },
+        {
+            "keyword": "adios",
+            "help": "escribir `iyo adios` te echa del servidor, si eres carepicha y mencionas a gente les echas a ellos."
+        },
+        {
+            "keyword": "help",
+            "help": "escribir `iyo help <un comando>` te da una breve explicación del comando"
+        }
+    ]
+}

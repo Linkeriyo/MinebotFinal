@@ -1,0 +1,94 @@
+{
+    "car": [
+        {
+            "id": "civiceg6",
+            "name": "Honda Civic EG6",
+            "imageUrl": "https://cochesjaponeses.es/wp-content/uploads/hondaciviceg61.jpg"
+        },
+        {
+            "id": "ferrarif40",
+            "name": "Ferrari F40",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-46.jpg"
+        },
+        {
+            "id": "pmacanturbo",
+            "name": "Porsche Macan Turbo",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/ks_porsche_macan.jpg"
+        },
+        {
+            "id": "abarth595sss2",
+            "name": "Abarth 595 SS Step 2",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-4.jpg"
+        },
+        {
+            "id": "argiuliaqv",
+            "name": "Alfa Romeo Giulia QV",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/ks_alfa_giulia_qv.jpg"
+        },
+        {
+            "id": "audir8v10plus",
+            "name": "Audi R8 V10 Plus",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-13.jpg"
+        },
+        {
+            "id": "audiquattros1",
+            "name": "Audi Sport Quattro S1",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-14.jpg"
+        },
+        {
+            "id": "bmwm3e30",
+            "name": "BMW M3 E30",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-18.jpg"
+        },
+        {
+            "id": "bmwm3e92",
+            "name": "BMW M3 E92",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-23.jpg"
+        },
+        {
+            "id": "f312t1975",
+            "name": "F312T 1975",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-45.jpg"
+        },
+        {
+            "id": "ferrari458",
+            "name": "Ferrari 458",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-40.jpg"
+        },
+        {
+            "id": "laferrari",
+            "name": "Ferrari LaFerrari",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-49.jpg"
+        },
+        {
+            "id": "mustang2015",
+            "name": "Ford Mustang 2015",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-54.jpg"
+        },
+        {
+            "id": "ktmxbowr",
+            "name": "KTM X-Bow R",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-55.jpg"
+        },
+        {
+            "id": "lambohuracanperf",
+            "name": "Lamborghini Huracan Performante",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/ks_lamborghini_huracan_performante.jpg"
+        },
+        {
+            "id": "lambomiura",
+            "name": "Lamborghini Miura",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-60.jpg"
+        },
+        {
+            "id": "ae86",
+            "name": "Toyota AE86",
+            "imageUrl": "https://www.assettocorsa.net/wp-content/uploads/preview-114.jpg"
+        },
+        {
+            "id": "ffiestawrc2015",
+            "name": "Ford Fiesta WRC 2015",
+            "imageUrl": "https://assetto-db.com/img/previews/rl_ford_fiesta_wrc/big/kubica_team.png"
+        }
+    ]
+}
