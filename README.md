@@ -33,3 +33,10 @@ Uso: `[prefijo] circuito`
 Da acceso a la lista de tiempos de minecrafters.
 
 Uso: `[prefijo] tiempos <add/show>`
+
+
+### [prefijo] ruleta
+
+Pregunta y responde si un carepicha aleatorio es el próximo en irse de minecrafters.
+
+Uso: `[prefijo] ruleta`
