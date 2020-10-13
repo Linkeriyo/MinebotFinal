@@ -10,22 +10,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
-import minebotfinal.commands.AdiosCmd;
-import minebotfinal.commands.CarroCmd;
-import minebotfinal.commands.CircuitoCmd;
-import minebotfinal.commands.TiemposCmd;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
@@ -36,34 +30,44 @@ import org.json.JSONObject;
  */
 public class MinebotFinal {
 
-    JDA myBot;
+    JDA bot;
     String token, prefix;
-
+    long ownerId = 154268434090164226L;
     JSONObject config;
 
     public MinebotFinal() throws LoginException {
         try {
-
             config = new JSONObject(readJson("files/config.json"));
             token = config.get("token").toString();
             prefix = config.get("prefix").toString();
 
-            myBot = new JDABuilder(this.token)
+            bot = new JDABuilder(this.token)
                     .addEventListeners(new MessagesListener(this.prefix))
                     .build();
-            myBot.awaitReady();
+            bot.awaitReady();
 
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) { 
+        } catch (InterruptedException | IOException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         Thread console = new Thread(new InputListener());
 
         console.start();
+    }
+
+    public void toggleMuteForOwnersChannel() {
+            List<Member> members = bot.getGuildById(580421667336224769L).getMember(bot.getUserById(154268434090164226L)).getVoiceState().getChannel().getMembers();
+            for (Member member : members) {
+
+                if (member.getVoiceState().isGuildMuted()) {
+                    member.mute(false).queue();
+                    System.out.println("unmuted");
+                } else {
+                    member.mute(true).queue();
+                    System.out.println("muted");
+                }
+
+            }
     }
 
     /**
@@ -73,7 +77,7 @@ public class MinebotFinal {
      * @return A String with the content of the file.
      * @throws FileNotFoundException
      */
-    static public String readJson(String path) throws FileNotFoundException, IOException {
+    static public String readJson(String path) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(new File(path)));
         String content = "", line;
 
@@ -95,49 +99,23 @@ public class MinebotFinal {
         }
 
         @Override
-        // Will be exectued when a message is recieved.
+        // Will be executed when a message is received.
         public void onMessageReceived(MessageReceivedEvent event) {
             Message msg = event.getMessage();
             String content = msg.getContentRaw();
 
             // If the message is not from this bot and the message starts with the specified prefix...
-            if (!msg.getAuthor().getId().equals(myBot.getSelfUser().getId()) && content.startsWith(prefix)) {
+            if (!msg.getAuthor().getId().equals(bot.getSelfUser().getId()) && content.startsWith(prefix)) {
                 // This is the content of the message without the prefix.
                 String command = content.substring(prefix.length());
 
                 // This an array with each word in the command.
                 String[] args = command.split(" ");
 
-                if (command.equals("es una bichiyal")) {
-                    msg.getChannel().sendMessage("le gusta montalse en los banshee y chillal").queue();
-                } else if (command.equals("quien cojones es juanca")) {
-                    msg.getChannel().sendMessage("<@154268434090164226>").queue();
-                } else if (command.equals("quien cojones es christian")) {
-                    msg.getChannel().sendMessage("<@266171278954594307>").queue();
-                } else if (command.equals("quien cojones es cristian")) {
-                    msg.getChannel().sendMessage("<@250286527840518144>").queue();
-                } else if (command.equals("quien cojones es narayan monge")) {
-                    msg.getChannel().sendMessage("<@287461403768389632>").queue();
-                } else if (command.equals("quien cojones es kraugen")) {
-                    msg.getChannel().sendMessage("un calvo").queue();
-                }
-
                 switch (args[0]) {
-                    case "carro":
-                        CarroCmd carCommand = new CarroCmd();
-                        carCommand.checkCommand(args, msg);
-                        break;
-                    case "circuito":
-                        CircuitoCmd trackCommand = new CircuitoCmd();
-                        trackCommand.checkCommand(args, msg);
-                        break;
-                    case "tiempos":
-                        TiemposCmd recordsCommand = new TiemposCmd();
-                        recordsCommand.checkCommand(args, msg, myBot);
-                        break;
                     case "ruleta":
                         try {
-                            List<Member> members = msg.getGuild().getMembersWithRoles(myBot.getRoleById("580426709581692928"));
+                            List<Member> members = msg.getGuild().getMembersWithRoles(bot.getRoleById("580426709581692928"));
                             int member = (int) (Math.random() * members.size());
                             boolean gone = (int)(Math.random() * 2) == 0;
                             msg.getChannel().sendMessage("¿es " + members.get(member).getUser().getName() + " el próximo en irse de minecrafters?").queue();
@@ -150,15 +128,30 @@ public class MinebotFinal {
                             msg.getChannel().sendMessage("este comando solo se puede usar en minecrafters mi pana").queue();
                         }
                         break;
-                    case "adios":
-                        try {
-                            AdiosCmd kickCommand = new AdiosCmd();
-                            kickCommand.checkCommand(args, msg, myBot);
-                        } catch (IllegalStateException e) {
-                            msg.getChannel().sendMessage("este comando solo se puede usar en minecrafters mi pana").queue();
+
+                    case "mute":
+                        if (msg.getMember().getId().equals("154268434090164226")) {
+                            List<Member> members = msg.getMember().getVoiceState().getChannel().getMembers();
+                            for (Member member : members) {
+                                member.mute(true).queue();
+                            }
+                            msg.getTextChannel().sendMessage("muteados jeje").queue();
+                        } else {
+                            msg.getTextChannel().sendMessage("no, tú no").queue();
                         }
                         break;
 
+                    case "unmute":
+                        if (msg.getMember().getId().equals("154268434090164226")) {
+                            List<Member> members = msg.getMember().getVoiceState().getChannel().getMembers();
+                            for (Member member : members) {
+                                member.mute(false).queue();
+                            }
+                            msg.getTextChannel().sendMessage("desmuteados los pibes").queue();
+                        } else {
+                            msg.getTextChannel().sendMessage("no, tú no").queue();
+                        }
+                        break;
                 }
             }
         }
@@ -169,13 +162,12 @@ public class MinebotFinal {
         @Override
         public void run() {
             Scanner scan = new Scanner(System.in, "ISO-8859-1").useDelimiter("\n").useLocale(new Locale("es", "ES"));
-            boolean stop = false;
 
-            while (!stop) {
+            while (true) {
                 String input = scan.next();
                 String[] args = input.split(" ");
 
-                List<TextChannel> textChannels = myBot.getGuildById("580421667336224769").getTextChannels();
+                List<TextChannel> textChannels = Objects.requireNonNull(bot.getGuildById("580421667336224769")).getTextChannels();
 
                 boolean channelFound = false;
                 for (TextChannel channel : textChannels) {
@@ -194,8 +186,8 @@ public class MinebotFinal {
         }
     }
 
-    public JDA getMyBot() {
-        return myBot;
+    public JDA getBot() {
+        return bot;
     }
 
     public String getPrefix() {
@@ -205,23 +197,22 @@ public class MinebotFinal {
     public static void main(String[] args) {
         try {
             MinebotFinal bot = new MinebotFinal();
-            bot.myBot.awaitReady();
+            bot.bot.awaitReady();
             
             String input = "";
             Scanner in = new Scanner(System.in);
             
-            List<Message> musicMessages = bot.myBot.getTextChannelById("710581989748768889").getHistoryFromBeginning(100).complete().getRetrievedHistory();
-            System.out.println(musicMessages);
+/*            List<Message> musicMessages = bot.bot.getTextChannelById("710581989748768889").getHistoryFromBeginning(100).complete().getRetrievedHistory();
+            
+            System.out.println(musicMessages.toString());
             
             for (Message msg : musicMessages) {
                 if (!msg.getAuthor().getId().equals("547905866255433758")) {
                     msg.delete().queue();
                 }
-            }
+            }*/
 
-        } catch (LoginException ex) {
-            Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+        } catch (LoginException | InterruptedException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
