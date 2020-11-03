@@ -1,33 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package minebotfinal;
+package minebotfinal.controllers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
 
-/**
- *
- * @author linke
- */
+import javax.security.auth.login.LoginException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static minebotfinal.jsonreaders.JSON.readJson;
+
 public class MinebotFinal {
 
     JDA bot;
@@ -70,29 +63,10 @@ public class MinebotFinal {
             }
     }
 
-    /**
-     * Reads a whole .json file and returns a String with its content.
-     *
-     * @param path The path of the file.
-     * @return A String with the content of the file.
-     * @throws FileNotFoundException
-     */
-    static public String readJson(String path) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(new File(path)));
-        String content = "", line;
-
-            while ((line = br.readLine()) != null) {
-                content = content.concat(line);
-            }
-            br.close();
-
-        return content;
-    }
-
     // Listener for incoming messages.
     private class MessagesListener extends ListenerAdapter {
 
-        String prefix;
+        final String prefix;
 
         public MessagesListener(String prefix) {
             this.prefix = prefix;
@@ -161,7 +135,7 @@ public class MinebotFinal {
 
         @Override
         public void run() {
-            Scanner scan = new Scanner(System.in, "ISO-8859-1").useDelimiter("\n").useLocale(new Locale("es", "ES"));
+            Scanner scan = new Scanner(System.in, StandardCharsets.ISO_8859_1).useDelimiter("\n").useLocale(new Locale("es", "ES"));
 
             while (true) {
                 String input = scan.next();

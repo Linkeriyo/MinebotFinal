@@ -3,27 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package minebotfinal;
+package minebotfinal.jsonreaders;
 
-import minebotfinal.MinebotFinal;
-import java.io.FileNotFoundException;
+import minebotfinal.models.Track;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import minebotfinal.types.Track;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
+import static minebotfinal.jsonreaders.JSON.readJson;
 
 public class TracksJSON {
     
     List<Track> trackList = new ArrayList<>();
 
-    public TracksJSON(String path) throws FileNotFoundException, IOException {
+    public TracksJSON(String path) throws IOException {
         JSONObject obj;
         JSONArray tracks;
         
         
-        obj = new JSONObject(MinebotFinal.readJson(path));
+        obj = new JSONObject(readJson(path));
         tracks = obj.getJSONArray("track");
 
         for (Object track : tracks) {

@@ -3,32 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package minebotfinal;
+package minebotfinal.jsonreaders;
+
+import minebotfinal.models.Car;
+import minebotfinal.models.Record;
+import minebotfinal.models.Track;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import minebotfinal.types.Car;
-import minebotfinal.types.Record;
-import minebotfinal.types.Track;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
+import static minebotfinal.jsonreaders.JSON.readJson;
 
 public class RecordsJSON {
     
     List<Record> recordList = new ArrayList<>();
     String path;
 
-    public RecordsJSON(String path) throws FileNotFoundException, IOException {
+    public RecordsJSON(String path) throws IOException {
         this.path = path;
         JSONObject obj;
         JSONArray records;
 
-        obj = new JSONObject(MinebotFinal.readJson(this.path));
+        obj = new JSONObject(readJson(this.path));
         records = obj.getJSONArray("record");
 
         for (Object record : records) {
