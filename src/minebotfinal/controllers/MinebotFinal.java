@@ -1,7 +1,9 @@
 package minebotfinal.controllers;
 
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -23,9 +25,8 @@ import static minebotfinal.jsonreaders.JSON.readJson;
 
 public class MinebotFinal {
 
-    JDA bot;
+    JDA jda;
     String token, prefix;
-    long ownerId = 154268434090164226L;
     JSONObject config;
 
     public MinebotFinal() throws LoginException {
@@ -34,10 +35,10 @@ public class MinebotFinal {
             token = config.get("token").toString();
             prefix = config.get("prefix").toString();
 
-            bot = new JDABuilder(this.token)
-                    .addEventListeners(new MessagesListener(this.prefix))
+            jda = JDABuilder.createDefault(token)
+                    .addEventListeners(new MessagesListener(prefix))
                     .build();
-            bot.awaitReady();
+            jda.awaitReady();
 
         } catch (InterruptedException | IOException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
@@ -46,21 +47,6 @@ public class MinebotFinal {
         Thread console = new Thread(new InputListener());
 
         console.start();
-    }
-
-    public void toggleMuteForOwnersChannel() {
-            List<Member> members = bot.getGuildById(580421667336224769L).getMember(bot.getUserById(154268434090164226L)).getVoiceState().getChannel().getMembers();
-            for (Member member : members) {
-
-                if (member.getVoiceState().isGuildMuted()) {
-                    member.mute(false).queue();
-                    System.out.println("unmuted");
-                } else {
-                    member.mute(true).queue();
-                    System.out.println("muted");
-                }
-
-            }
     }
 
     // Listener for incoming messages.
@@ -79,7 +65,7 @@ public class MinebotFinal {
             String content = msg.getContentRaw();
 
             // If the message is not from this bot and the message starts with the specified prefix...
-            if (!msg.getAuthor().getId().equals(bot.getSelfUser().getId()) && content.startsWith(prefix)) {
+            if (!msg.getAuthor().getId().equals(jda.getSelfUser().getId()) && content.startsWith(prefix)) {
                 // This is the content of the message without the prefix.
                 String command = content.substring(prefix.length());
 
@@ -87,11 +73,15 @@ public class MinebotFinal {
                 String[] args = command.split(" ");
 
                 switch (args[0]) {
+                    case "ping":
+                        msg.getTextChannel().sendMessage("pong!").queue();
+                        break;
+
                     case "ruleta":
                         try {
-                            List<Member> members = msg.getGuild().getMembersWithRoles(bot.getRoleById("580426709581692928"));
+                            List<Member> members = msg.getGuild().getMembersWithRoles(jda.getRoleById("580426709581692928"));
                             int member = (int) (Math.random() * members.size());
-                            boolean gone = (int)(Math.random() * 2) == 0;
+                            boolean gone = (int) (Math.random() * 2) == 0;
                             msg.getChannel().sendMessage("¿es " + members.get(member).getUser().getName() + " el próximo en irse de minecrafters?").queue();
                             if (gone) {
                                 msg.getChannel().sendMessage("sii").queue();
@@ -126,6 +116,11 @@ public class MinebotFinal {
                             msg.getTextChannel().sendMessage("no, tú no").queue();
                         }
                         break;
+
+                    case "amongus":
+                        if (msg.getMember().hasPermission(Permission.ADMINISTRATOR)) {
+                            new AmongUsMuter(msg).run();
+                        }
                 }
             }
         }
@@ -141,7 +136,7 @@ public class MinebotFinal {
                 String input = scan.next();
                 String[] args = input.split(" ");
 
-                List<TextChannel> textChannels = Objects.requireNonNull(bot.getGuildById("580421667336224769")).getTextChannels();
+                List<TextChannel> textChannels = Objects.requireNonNull(jda.getGuildById("580421667336224769")).getTextChannels();
 
                 boolean channelFound = false;
                 for (TextChannel channel : textChannels) {
@@ -160,8 +155,8 @@ public class MinebotFinal {
         }
     }
 
-    public JDA getBot() {
-        return bot;
+    public JDA getJda() {
+        return jda;
     }
 
     public String getPrefix() {
@@ -171,8 +166,8 @@ public class MinebotFinal {
     public static void main(String[] args) {
         try {
             MinebotFinal bot = new MinebotFinal();
-            bot.bot.awaitReady();
-            
+            bot.jda.awaitReady();
+
             String input = "";
             Scanner in = new Scanner(System.in);
             
