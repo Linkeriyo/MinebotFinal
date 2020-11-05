@@ -93,34 +93,13 @@ public class MinebotFinal {
                         }
                         break;
 
-                    case "mute":
-                        if (msg.getMember().getId().equals("154268434090164226")) {
-                            List<Member> members = msg.getMember().getVoiceState().getChannel().getMembers();
-                            for (Member member : members) {
-                                member.mute(true).queue();
-                            }
-                            msg.getTextChannel().sendMessage("muteados jeje").queue();
-                        } else {
-                            msg.getTextChannel().sendMessage("no, tú no").queue();
-                        }
-                        break;
-
-                    case "unmute":
-                        if (msg.getMember().getId().equals("154268434090164226")) {
-                            List<Member> members = msg.getMember().getVoiceState().getChannel().getMembers();
-                            for (Member member : members) {
-                                member.mute(false).queue();
-                            }
-                            msg.getTextChannel().sendMessage("desmuteados los pibes").queue();
-                        } else {
-                            msg.getTextChannel().sendMessage("no, tú no").queue();
-                        }
-                        break;
-
                     case "amongus":
-                        if (msg.getMember().hasPermission(Permission.ADMINISTRATOR)) {
-                            new AmongUsMuter(msg).run();
-                        }
+                        new AmongUsMuter(msg).run();
+                        break;
+
+                    case "drop":
+                        msg.getTextChannel().sendMessage("una hostia te dropeaba en la cara").queue();
+                        break;
                 }
             }
         }
@@ -130,7 +109,7 @@ public class MinebotFinal {
 
         @Override
         public void run() {
-            Scanner scan = new Scanner(System.in, StandardCharsets.ISO_8859_1).useDelimiter("\n").useLocale(new Locale("es", "ES"));
+            Scanner scan = new Scanner(System.in, "ISO_8859_1").useDelimiter("\n").useLocale(new Locale("es", "ES"));
 
             while (true) {
                 String input = scan.next();
