@@ -74,14 +74,14 @@ public class AmongUsMuter implements Runnable {
         private void muteAllInChannel() {
             List<Member> members = voiceChannel.getMembers();
             for (Member member : members) {
-                member.mute(true).queue();
+                member.mute(true).complete();
             }
         }
 
         private void unmuteAllInChannel() {
             List<Member> members = voiceChannel.getMembers();
             for (Member member : members) {
-                member.mute(false).queue();
+                member.mute(false).complete();
             }
         }
 
@@ -106,14 +106,14 @@ public class AmongUsMuter implements Runnable {
 
                 switch (emote.getAsCodepoints().toUpperCase()) {
                     case muteCodepoint:
+                        reaction.removeReaction(jda.getSelfUser()).complete();
                         muteAllInChannel();
-                        reaction.removeReaction(jda.getSelfUser()).queue();
-                        sentMessage.addReaction(unmuteCodepoint).queue();
+                        sentMessage.addReaction(unmuteCodepoint).complete();
                         break;
                     case unmuteCodepoint:
+                        reaction.removeReaction(jda.getSelfUser()).complete();
                         unmuteAllInChannel();
-                        reaction.removeReaction(jda.getSelfUser()).queue();
-                        sentMessage.addReaction(muteCodepoint).queue();
+                        sentMessage.addReaction(muteCodepoint).complete();
                         break;
                 }
             } else if (!evt.getUser().equals(host)

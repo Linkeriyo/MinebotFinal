@@ -3,9 +3,9 @@ package minebotfinal.controllers;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
@@ -55,6 +55,27 @@ public class MinebotFinal {
 
         final String prefix;
 
+        private boolean checkPermissions(Permission[] permissions, Guild guild) {
+            Member self = guild.getSelfMember();
+            for (Permission perm : permissions) {
+                if (!self.hasPermission(perm)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void sendPermissionsMessage(Permission[] permissions) {
+            MessageBuilder mb = new MessageBuilder().setContent("se requieren los permisos: ");
+            for (int i = 0; i < permissions.length; i++) {
+                if (i == 0) {
+                    mb.append(permissions[i].getName());
+                } else {
+                    mb.append(", ").append(permissions[i].getName());
+                }
+            }
+        }
+
         public MessagesListener(String prefix) {
             this.prefix = prefix;
         }
@@ -95,7 +116,19 @@ public class MinebotFinal {
                         break;
 
                     case "amongus":
-                        new AmongUsMuter(msg).run();
+                        Permission[] requiredPermissions = new Permission[]{
+                                Permission.MANAGE_EMOTES,
+                                Permission.MESSAGE_MANAGE,
+                                Permission.VOICE_MUTE_OTHERS
+                        };
+
+                        if (msg.getTextChannel().getType() == ChannelType.PRIVATE) {
+                            msg.getTextChannel().sendMessage("este comando solo se puede usar en un servidor").queue();
+                        } else if (!checkPermissions(requiredPermissions, msg.getGuild())) {
+                            sendPermissionsMessage(requiredPermissions);
+                        } else {
+                            new AmongUsMuter(msg).run();
+                        }
                         break;
 
                     case "drop":
