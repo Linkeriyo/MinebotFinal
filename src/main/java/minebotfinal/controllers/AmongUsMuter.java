@@ -1,11 +1,9 @@
 package minebotfinal.controllers;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.EmoteManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -15,7 +13,7 @@ public class AmongUsMuter implements Runnable {
     final String muteCodepoint = "U+1F507",
             unmuteCodepoint = "U+1F50A",
             crossCodepoint = "U+274C";
-    Message recievedMessage,
+    Message receivedMessage,
             sentMessage;
     User host;
     VoiceChannel voiceChannel;
@@ -23,12 +21,12 @@ public class AmongUsMuter implements Runnable {
     JDA jda;
     ReactionListener rl;
 
-    public AmongUsMuter(Message recievedMessage) throws NullPointerException {
-        this.recievedMessage = recievedMessage;
-        this.textChannel = recievedMessage.getTextChannel();
-        this.jda = recievedMessage.getJDA();
-        this.voiceChannel = recievedMessage.getMember().getVoiceState().getChannel();
-        this.host = recievedMessage.getAuthor();
+    public AmongUsMuter(Message receivedMessage) throws NullPointerException {
+        this.receivedMessage = receivedMessage;
+        this.textChannel = receivedMessage.getTextChannel();
+        this.jda = receivedMessage.getJDA();
+        this.voiceChannel = receivedMessage.getMember().getVoiceState().getChannel();
+        this.host = receivedMessage.getAuthor();
     }
 
 
@@ -61,11 +59,15 @@ public class AmongUsMuter implements Runnable {
                 + "\nanfitrion: " + host.getName()
         ).complete();
         sentMessage = findLastMessageBySelf(textChannel);
-        sentMessage.addReaction(crossCodepoint).complete();
-        sentMessage.addReaction(muteCodepoint).complete();
+        if (sentMessage != null) {
+            sentMessage.addReaction(crossCodepoint).complete();
+            sentMessage.addReaction(muteCodepoint).complete();
 
-        rl = new ReactionListener();
-        jda.addEventListener(rl);
+            rl = new ReactionListener();
+            jda.addEventListener(rl);
+        } else {
+            textChannel.sendMessage("algo ha ido mal").queue();
+        }
     }
 
     private class ReactionListener extends ListenerAdapter {
@@ -114,7 +116,8 @@ public class AmongUsMuter implements Runnable {
                         sentMessage.addReaction(muteCodepoint).queue();
                         break;
                 }
-            } else if (!evt.getMember().getUser().equals(host)) {
+            } else if (!evt.getUser().equals(host)
+                    && !evt.getUser().equals(jda.getSelfUser())) {
                 textChannel.sendMessage("no eres el host amigo").queue();
             }
         }

@@ -3,7 +3,6 @@ package minebotfinal.controllers;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -12,8 +11,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
 
 import javax.security.auth.login.LoginException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.rmi.ServerError;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -39,7 +39,8 @@ public class MinebotFinal {
                     .addEventListeners(new MessagesListener(prefix))
                     .build();
             jda.awaitReady();
-
+        } catch (FileNotFoundException ex) {
+            System.err.println("No se ha encontrado el archivo files/config.json");
         } catch (InterruptedException | IOException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
