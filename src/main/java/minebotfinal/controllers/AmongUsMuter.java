@@ -21,6 +21,62 @@ public class AmongUsMuter implements Runnable {
     JDA jda;
     ReactionListener rl;
 
+    private class ReactionListener extends ListenerAdapter {
+
+        private void muteAllInChannel() {
+            List<Member> members = voiceChannel.getMembers();
+            for (Member member : members) {
+                member.mute(true).complete();
+            }
+        }
+
+        private void unmuteAllInChannel() {
+            List<Member> members = voiceChannel.getMembers();
+            for (Member member : members) {
+                member.mute(false).complete();
+            }
+        }
+
+        @Override
+        public void onMessageReactionAdd(@NotNull MessageReactionAddEvent evt) {
+            Member member = evt.getMember();
+
+            MessageReaction reaction = evt.getReaction();
+            MessageReaction.ReactionEmote emote = reaction.getReactionEmote();
+
+            if (evt.getMessageId().equals(sentMessage.getId())
+                    && !member.getUser().equals(jda.getSelfUser())
+                    && member.getVoiceState().getChannel().equals(voiceChannel)
+                    && member.getUser().equals(host)) {
+                reaction.removeReaction(evt.getUser()).queue();
+
+                // Finalize among us mode.
+                if (emote.getAsCodepoints().toUpperCase().equals(crossCodepoint)) {
+                    unmuteAllInChannel();
+                    jda.removeEventListener(rl);
+                    sentMessage.delete().queue();
+                    return;
+                }
+
+                switch (emote.getAsCodepoints().toUpperCase()) {
+                    case muteCodepoint:
+                        reaction.removeReaction(jda.getSelfUser()).complete();
+                        muteAllInChannel();
+                        sentMessage.addReaction(unmuteCodepoint).complete();
+                        break;
+                    case unmuteCodepoint:
+                        reaction.removeReaction(jda.getSelfUser()).complete();
+                        unmuteAllInChannel();
+                        sentMessage.addReaction(muteCodepoint).complete();
+                        break;
+                }
+            } else if (!evt.getUser().equals(host)
+                    && !evt.getUser().equals(jda.getSelfUser())) {
+                textChannel.sendMessage("no eres el host amigo").queue();
+            }
+        }
+    }
+
     public AmongUsMuter(Message receivedMessage) throws NullPointerException {
         this.receivedMessage = receivedMessage;
         this.textChannel = receivedMessage.getTextChannel();
@@ -28,7 +84,6 @@ public class AmongUsMuter implements Runnable {
         this.voiceChannel = receivedMessage.getMember().getVoiceState().getChannel();
         this.host = receivedMessage.getAuthor();
     }
-
 
     /**
      * Finds the last message sent by this bot in a text channel.
@@ -69,58 +124,4 @@ public class AmongUsMuter implements Runnable {
             textChannel.sendMessage("algo ha ido mal").queue();
         }
     }
-
-    private class ReactionListener extends ListenerAdapter {
-        private void muteAllInChannel() {
-            List<Member> members = voiceChannel.getMembers();
-            for (Member member : members) {
-                member.mute(true).complete();
-            }
-        }
-
-        private void unmuteAllInChannel() {
-            List<Member> members = voiceChannel.getMembers();
-            for (Member member : members) {
-                member.mute(false).complete();
-            }
-        }
-
-        @Override
-        public void onMessageReactionAdd(@NotNull MessageReactionAddEvent evt) {
-            MessageReaction reaction = evt.getReaction();
-            MessageReaction.ReactionEmote emote = reaction.getReactionEmote();
-
-            if (evt.getMessageId().equals(sentMessage.getId())
-                    && !evt.getMember().getUser().equals(jda.getSelfUser())
-                    && evt.getMember().getVoiceState().getChannel().equals(voiceChannel)
-                    && evt.getMember().getUser().equals(host)) {
-                reaction.removeReaction(evt.getUser()).queue();
-
-                // Finalize among us mode.
-                if (emote.getAsCodepoints().toUpperCase().equals(crossCodepoint)) {
-                    unmuteAllInChannel();
-                    jda.removeEventListener(rl);
-                    sentMessage.delete().queue();
-                    return;
-                }
-
-                switch (emote.getAsCodepoints().toUpperCase()) {
-                    case muteCodepoint:
-                        reaction.removeReaction(jda.getSelfUser()).complete();
-                        muteAllInChannel();
-                        sentMessage.addReaction(unmuteCodepoint).complete();
-                        break;
-                    case unmuteCodepoint:
-                        reaction.removeReaction(jda.getSelfUser()).complete();
-                        unmuteAllInChannel();
-                        sentMessage.addReaction(muteCodepoint).complete();
-                        break;
-                }
-            } else if (!evt.getUser().equals(host)
-                    && !evt.getUser().equals(jda.getSelfUser())) {
-                textChannel.sendMessage("no eres el host amigo").queue();
-            }
-        }
-    }
-
 }

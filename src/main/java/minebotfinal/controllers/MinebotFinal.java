@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.rmi.ServerError;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -28,6 +27,8 @@ public class MinebotFinal {
     JDA jda;
     String token, prefix;
     JSONObject config;
+    Guild minecrafters;
+    Role carepicha, ogCarepicha;
 
     public MinebotFinal() throws LoginException {
         try {
@@ -39,15 +40,18 @@ public class MinebotFinal {
                     .addEventListeners(new MessagesListener(prefix))
                     .build();
             jda.awaitReady();
+
+            minecrafters = jda.getGuildById("580421667336224769");
+            assert minecrafters != null;
+            carepicha = minecrafters.getRoleById("580426709581692928");
+            ogCarepicha = minecrafters.getRoleById("708345730460549122");
         } catch (FileNotFoundException ex) {
             System.err.println("No se ha encontrado el archivo files/config.json");
         } catch (InterruptedException | IOException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Thread console = new Thread(new InputListener());
-
-        console.start();
+        new Thread(new InputListener()).start();
     }
 
     // Listener for incoming messages.
@@ -65,7 +69,7 @@ public class MinebotFinal {
             return true;
         }
 
-        private void sendPermissionsMessage(Permission[] permissions) {
+        private void sendPermissionsMessage(Permission[] permissions, TextChannel tc) {
             MessageBuilder mb = new MessageBuilder().setContent("se requieren los permisos: ");
             for (int i = 0; i < permissions.length; i++) {
                 if (i == 0) {
@@ -74,6 +78,7 @@ public class MinebotFinal {
                     mb.append(", ").append(permissions[i].getName());
                 }
             }
+            tc.sendMessage(mb.build()).queue();
         }
 
         public MessagesListener(String prefix) {
@@ -99,19 +104,20 @@ public class MinebotFinal {
                         msg.getTextChannel().sendMessage("pong!").queue();
                         break;
 
+                    case "pong":
+                        msg.getTextChannel().sendMessage("ping!").queue();
+                        break;
+
                     case "ruleta":
-                        try {
-                            List<Member> members = msg.getGuild().getMembersWithRoles(jda.getRoleById("580426709581692928"));
-                            int member = (int) (Math.random() * members.size());
-                            boolean gone = (int) (Math.random() * 2) == 0;
-                            msg.getChannel().sendMessage("¿es " + members.get(member).getUser().getName() + " el próximo en irse de minecrafters?").queue();
-                            if (gone) {
-                                msg.getChannel().sendMessage("sii").queue();
-                            } else {
-                                msg.getChannel().sendMessage("noo").queue();
-                            }
-                        } catch (IllegalStateException e) {
-                            msg.getChannel().sendMessage("este comando solo se puede usar en minecrafters mi pana").queue();
+                        List<Member> members = minecrafters.getMembersWithRoles(ogCarepicha);
+                        members.addAll(minecrafters.getMembersWithRoles(carepicha));
+                        int member = (int) (Math.random() * members.size());
+                        boolean gone = (int) (Math.random() * 2) == 0;
+                        msg.getChannel().sendMessage("¿es " + members.get(member).getUser().getName() + " el próximo en irse de minecrafters?").queue();
+                        if (gone) {
+                            msg.getChannel().sendMessage("sii").queue();
+                        } else {
+                            msg.getChannel().sendMessage("noo").queue();
                         }
                         break;
 
@@ -125,7 +131,7 @@ public class MinebotFinal {
                         if (msg.getTextChannel().getType() == ChannelType.PRIVATE) {
                             msg.getTextChannel().sendMessage("este comando solo se puede usar en un servidor").queue();
                         } else if (!checkPermissions(requiredPermissions, msg.getGuild())) {
-                            sendPermissionsMessage(requiredPermissions);
+                            sendPermissionsMessage(requiredPermissions, msg.getTextChannel());
                         } else {
                             new AmongUsMuter(msg).run();
                         }
@@ -183,17 +189,6 @@ public class MinebotFinal {
 
             String input = "";
             Scanner in = new Scanner(System.in);
-            
-/*            List<Message> musicMessages = bot.bot.getTextChannelById("710581989748768889").getHistoryFromBeginning(100).complete().getRetrievedHistory();
-            
-            System.out.println(musicMessages.toString());
-            
-            for (Message msg : musicMessages) {
-                if (!msg.getAuthor().getId().equals("547905866255433758")) {
-                    msg.delete().queue();
-                }
-            }*/
-
         } catch (LoginException | InterruptedException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
