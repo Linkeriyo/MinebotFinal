@@ -1,25 +1,52 @@
-package minebotfinal.controllers;
+package minebotfinal.controllers.commands;
 
+import minebotfinal.exceptions.ServerExclusiveCommandException;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class AmongUsMuter implements Runnable {
-
+public class AmongUsMuter extends Command implements Runnable {
     final String muteCodepoint = "U+1F507",
             unmuteCodepoint = "U+1F50A",
             crossCodepoint = "U+274C";
     Message receivedMessage,
             sentMessage;
     User host;
-    VoiceChannel voiceChannel;
     TextChannel textChannel;
+    VoiceChannel voiceChannel;
     JDA jda;
     ReactionListener rl;
+
+    public AmongUsMuter(Message receivedMessage) throws NullPointerException, PermissionException, ServerExclusiveCommandException {
+        // Command exclusive variables.
+        serverExclusive = true;
+        requiredPermissions = new Permission[]{
+                Permission.MANAGE_EMOTES,
+                Permission.MESSAGE_MANAGE,
+                Permission.VOICE_MUTE_OTHERS
+        };
+
+        // Guild check
+        this.receivedMessage = receivedMessage;
+        this.messageChannel = receivedMessage.getChannel();
+        checkServerExclusiveMessage();
+
+        this.textChannel = receivedMessage.getTextChannel();
+        this.currentGuild = receivedMessage.getGuild();
+        if (!checkPermissions().isEmpty()) {
+            sendPermissionsMessage();
+            throw new PermissionException("Permissions missing.");
+        }
+        this.jda = receivedMessage.getJDA();
+        this.voiceChannel = receivedMessage.getMember().getVoiceState().getChannel();
+        this.host = receivedMessage.getAuthor();
+    }
 
     private class ReactionListener extends ListenerAdapter {
 
@@ -72,17 +99,9 @@ public class AmongUsMuter implements Runnable {
                 }
             } else if (!evt.getUser().equals(host)
                     && !evt.getUser().equals(jda.getSelfUser())) {
-                textChannel.sendMessage("no eres el host amigo").queue();
+                AmongUsMuter.this.textChannel.sendMessage("no eres el host amigo").queue();
             }
         }
-    }
-
-    public AmongUsMuter(Message receivedMessage) throws NullPointerException {
-        this.receivedMessage = receivedMessage;
-        this.textChannel = receivedMessage.getTextChannel();
-        this.jda = receivedMessage.getJDA();
-        this.voiceChannel = receivedMessage.getMember().getVoiceState().getChannel();
-        this.host = receivedMessage.getAuthor();
     }
 
     /**
@@ -107,21 +126,17 @@ public class AmongUsMuter implements Runnable {
     @Override
     public void run() {
         if (voiceChannel == null) {
-            textChannel.sendMessage("no estas conectado a un canal de voz de " + textChannel.getGuild().getName() + " >:(").queue();
+            this.textChannel.sendMessage("no estas conectado a un canal de voz de " + this.textChannel.getGuild().getName() + " >:(").queue();
             return;
         }
-        textChannel.sendMessage("canal seleccionado: " + voiceChannel.getName()
+        this.textChannel.sendMessage("canal seleccionado: " + voiceChannel.getName()
                 + "\nanfitrion: " + host.getName()
         ).complete();
-        sentMessage = findLastMessageBySelf(textChannel);
-        if (sentMessage != null) {
-            sentMessage.addReaction(crossCodepoint).complete();
-            sentMessage.addReaction(muteCodepoint).complete();
+        sentMessage = findLastMessageBySelf(this.textChannel);
+        sentMessage.addReaction(crossCodepoint).complete();
+        sentMessage.addReaction(muteCodepoint).complete();
 
-            rl = new ReactionListener();
-            jda.addEventListener(rl);
-        } else {
-            textChannel.sendMessage("algo ha ido mal").queue();
-        }
+        rl = new ReactionListener();
+        jda.addEventListener(rl);
     }
 }

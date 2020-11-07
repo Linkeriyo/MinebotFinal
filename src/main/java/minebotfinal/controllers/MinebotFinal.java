@@ -1,12 +1,15 @@
 package minebotfinal.controllers;
 
 
+import minebotfinal.controllers.commands.AmongUsMuter;
+import minebotfinal.exceptions.ServerExclusiveCommandException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
 
@@ -23,7 +26,6 @@ import java.util.logging.Logger;
 import static minebotfinal.jsonreaders.JSON.readJson;
 
 public class MinebotFinal {
-
     JDA jda;
     String token, prefix;
     JSONObject config;
@@ -58,28 +60,6 @@ public class MinebotFinal {
     private class MessagesListener extends ListenerAdapter {
 
         final String prefix;
-
-        private boolean checkPermissions(Permission[] permissions, Guild guild) {
-            Member self = guild.getSelfMember();
-            for (Permission perm : permissions) {
-                if (!self.hasPermission(perm)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private void sendPermissionsMessage(Permission[] permissions, TextChannel tc) {
-            MessageBuilder mb = new MessageBuilder().setContent("se requieren los permisos: ");
-            for (int i = 0; i < permissions.length; i++) {
-                if (i == 0) {
-                    mb.append(permissions[i].getName());
-                } else {
-                    mb.append(", ").append(permissions[i].getName());
-                }
-            }
-            tc.sendMessage(mb.build()).queue();
-        }
 
         public MessagesListener(String prefix) {
             this.prefix = prefix;
@@ -122,24 +102,10 @@ public class MinebotFinal {
                         break;
 
                     case "amongus":
-                        Permission[] requiredPermissions = new Permission[]{
-                                Permission.MANAGE_EMOTES,
-                                Permission.MESSAGE_MANAGE,
-                                Permission.VOICE_MUTE_OTHERS
-                        };
-
-                        if (msg.getTextChannel().getType() == ChannelType.PRIVATE) {
-                            msg.getTextChannel().sendMessage("este comando solo se puede usar en un servidor").queue();
-                        } else if (!checkPermissions(requiredPermissions, msg.getGuild())) {
-                            sendPermissionsMessage(requiredPermissions, msg.getTextChannel());
-                        } else {
+                        try {
                             new AmongUsMuter(msg).run();
+                        } catch (PermissionException | ServerExclusiveCommandException ignored) {
                         }
-                        break;
-
-                    case "drop":
-                        msg.getTextChannel().sendMessage("una hostia te dropeaba en la cara").queue();
-                        break;
                 }
             }
         }
@@ -185,11 +151,7 @@ public class MinebotFinal {
     public static void main(String[] args) {
         try {
             MinebotFinal bot = new MinebotFinal();
-            bot.jda.awaitReady();
-
-            String input = "";
-            Scanner in = new Scanner(System.in);
-        } catch (LoginException | InterruptedException ex) {
+        } catch (LoginException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
