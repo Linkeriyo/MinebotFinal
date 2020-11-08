@@ -2,10 +2,13 @@ package minebotfinal.controllers;
 
 
 import minebotfinal.controllers.commands.amongus.AmongUsListener;
-import minebotfinal.controllers.listeners.ConsoleInputListener;
-import minebotfinal.controllers.listeners.MessageListener;
+import minebotfinal.controllers.commands.ruleta.RuletaListener;
+import minebotfinal.controllers.console.ConsoleInputListener;
+import minebotfinal.controllers.commands.simple.SimpleCommandsListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import org.json.JSONObject;
@@ -36,8 +39,10 @@ public class MinebotFinal {
             prefix = config.get("prefix").toString();
 
             jda = JDABuilder.createDefault(token)
-                    .addEventListeners(new MessageListener(prefix))
+                    .addEventListeners(new SimpleCommandsListener(prefix))
+                    .addEventListeners(new RuletaListener(prefix))
                     .addEventListeners(new AmongUsListener(prefix))
+                    .setActivity(Activity.listening(prefix + "help"))
                     .build();
             jda.awaitReady();
 
@@ -61,5 +66,4 @@ public class MinebotFinal {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

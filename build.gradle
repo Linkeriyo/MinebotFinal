@@ -18,3 +18,13 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     compile group: 'org.json', name: 'json', version: '20200518'
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Minebot Jar File',
+                'Implementation-Version': getArchiveVersion(),
+        'Main-Class': 'minebotfinal.controllers.MinebotFinal'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
