@@ -1,5 +1,6 @@
-package minebotfinal.controllers.commands;
+package minebotfinal.controllers.commands.amongus;
 
+import minebotfinal.controllers.commands.Command;
 import minebotfinal.exceptions.ServerExclusiveCommandException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -131,7 +132,7 @@ public class AmongUsMuter extends Command implements Runnable {
         }
         this.textChannel.sendMessage("canal seleccionado: " + voiceChannel.getName()
                 + "\nanfitrion: " + host.getName()
-        ).complete();
+        ).queue();
         sentMessage = findLastMessageBySelf(this.textChannel);
         sentMessage.addReaction(crossCodepoint).complete();
         sentMessage.addReaction(muteCodepoint).complete();

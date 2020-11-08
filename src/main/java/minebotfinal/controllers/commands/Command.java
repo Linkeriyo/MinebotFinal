@@ -3,7 +3,10 @@ package minebotfinal.controllers.commands;
 import minebotfinal.exceptions.ServerExclusiveCommandException;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.ArrayList;
 
