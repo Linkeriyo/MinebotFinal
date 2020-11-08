@@ -17,6 +17,8 @@ public class AmongUsListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        //TODO check if the user is carepicha or og carepicha
+
         Message msg = event.getMessage();
         if (event.getMessage().getContentRaw().startsWith(prefix + "amongus")) {
             try {
