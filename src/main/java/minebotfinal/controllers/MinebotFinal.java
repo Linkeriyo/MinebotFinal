@@ -32,7 +32,7 @@ public class MinebotFinal {
     Guild minecrafters;
     Role carepicha, ogCarepicha;
 
-    public MinebotFinal() throws LoginException {
+    public MinebotFinal() throws LoginException, FileNotFoundException {
         try {
             config = new JSONObject(readJson("files/config.json"));
             token = config.get("token").toString();
@@ -50,8 +50,6 @@ public class MinebotFinal {
             assert minecrafters != null;
             carepicha = minecrafters.getRoleById(carepichaRoleId);
             ogCarepicha = minecrafters.getRoleById(ogCarepichaRoleId);
-        } catch (FileNotFoundException ex) {
-            System.err.println("No se ha encontrado el archivo files/config.json");
         } catch (InterruptedException | IOException ex) {
             Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -59,11 +57,20 @@ public class MinebotFinal {
         new Thread(new ConsoleInputListener(jda)).start();
     }
 
-    public static void main(String[] args) {
-        try {
-            new MinebotFinal();
-        } catch (LoginException ex) {
-            Logger.getLogger(MinebotFinal.class.getName()).log(Level.SEVERE, null, ex);
+    public static void main(String[] args) throws InterruptedException {
+        boolean cool = false;
+        while (!cool) {
+            try {
+                new MinebotFinal();
+                cool = true;
+            } catch (LoginException ex) {
+                ex.printStackTrace();
+                Thread.currentThread().wait(10000);
+            } catch (FileNotFoundException ex) {
+                System.err.println("No se ha encontrado el archivo files/config.json");
+                cool = true;
+            }
         }
+
     }
 }
