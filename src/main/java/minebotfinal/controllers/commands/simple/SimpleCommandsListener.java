@@ -6,13 +6,23 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.omg.CosNaming._BindingIteratorImplBase;
 
-import java.time.OffsetDateTime;
+import java.time.*;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalField;
+import java.util.Date;
 import java.util.List;
 
 public class SimpleCommandsListener extends ListenerAdapter {
 
     String prefix;
+
+    public LocalDate toLocalDate(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
 
     public SimpleCommandsListener(String prefix) {
         this.prefix = prefix;
@@ -47,7 +57,7 @@ public class SimpleCommandsListener extends ListenerAdapter {
                     User author = msg.getAuthor();
                     embed = new EmbedBuilder()
                             .setDescription(request)
-                            .setTimestamp(OffsetDateTime.parse("2020-11-08T19:29:00.000Z"))
+                            .setTimestamp(new Date().toInstant())
                             .setAuthor(author.getName(), null, author.getAvatarUrl())
                             .build();
 
