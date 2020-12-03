@@ -66,7 +66,8 @@ public class SimpleCommandsListener extends ListenerAdapter {
                                     "\n> en ese mensaje para mutear / desmutear a todo el canal o salir del modo" +
                                     "\n> among us" +
                                     "\n> **solo carepichas y og carepichas**", false)
-                            .addField(prefix + "proposal", "> envia una propuesta a <@154268434090164226>, usad esto porfa", false)
+                            .addField(prefix + "proposal", "> envia una propuesta a <@154268434090164226>" +
+                                    "\n> la idea es que deis ideas no que me llaméis maricón", false)
                             .build();
 
                     msg.getChannel().sendMessage(embed).queue();
