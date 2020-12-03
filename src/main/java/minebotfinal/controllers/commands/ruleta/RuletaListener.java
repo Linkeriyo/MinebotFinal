@@ -24,9 +24,9 @@ public class RuletaListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         Message msg = event.getMessage();
         JDA jda = event.getJDA();
-        Guild minecrafters = jda.getGuildById(MinebotFinal.minecraftersGuildId);
-        Role ogCarepicha = jda.getRoleById(MinebotFinal.ogCarepichaRoleId);
-        Role carepicha = jda.getRoleById(MinebotFinal.carepichaRoleId);
+        Guild minecrafters = jda.getGuildById(MinebotFinal.MINECRAFTERS_GUILD_ID);
+        Role ogCarepicha = jda.getRoleById(MinebotFinal.OG_CAREPICHA_ROLE_ID);
+        Role carepicha = jda.getRoleById(MinebotFinal.CAREPICHA_ROLE_ID);
 
         if (msg.getContentRaw().startsWith(prefix + "ruleta")) {
             List<Member> members = minecrafters.getMembersWithRoles(ogCarepicha);

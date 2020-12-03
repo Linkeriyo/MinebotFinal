@@ -1,28 +1,18 @@
 package minebotfinal.controllers.commands.simple;
 
-import minebotfinal.controllers.MinebotFinal;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.omg.CosNaming._BindingIteratorImplBase;
 
-import java.time.*;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
 import java.util.Date;
-import java.util.List;
 
 public class SimpleCommandsListener extends ListenerAdapter {
 
     String prefix;
-
-    public LocalDate toLocalDate(Date dateToConvert) {
-        return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
 
     public SimpleCommandsListener(String prefix) {
         this.prefix = prefix;
@@ -52,7 +42,7 @@ public class SimpleCommandsListener extends ListenerAdapter {
                     msg.getChannel().sendMessage("ping!").queue();
                     break;
 
-                case "request":
+                case "proposal":
                     String request = command.substring(args[0].length());
                     User author = msg.getAuthor();
                     embed = new EmbedBuilder()
@@ -76,7 +66,7 @@ public class SimpleCommandsListener extends ListenerAdapter {
                                     "\n> en ese mensaje para mutear / desmutear a todo el canal o salir del modo" +
                                     "\n> among us" +
                                     "\n> **solo carepichas y og carepichas**", false)
-                            .addField(prefix + "request", "> envia una propuesta a <@154268434090164226>, usad esto porfa", false)
+                            .addField(prefix + "proposal", "> envia una propuesta a <@154268434090164226>, usad esto porfa", false)
                             .build();
 
                     msg.getChannel().sendMessage(embed).queue();

@@ -22,6 +22,12 @@ public class ConsoleInputListener implements Runnable {
 
         while (true) {
             String input = scan.next();
+
+            if (input.equals("quit")) {
+                System.err.println("Closing the bot...");
+                System.exit(0);
+            }
+
             String[] args = input.split(" ");
 
             List<TextChannel> textChannels = Objects.requireNonNull(jda.getGuildById("580421667336224769")).getTextChannels();
