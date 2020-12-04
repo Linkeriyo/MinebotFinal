@@ -130,12 +130,14 @@ public class AmongUsMuter extends Command implements Runnable {
             this.textChannel.sendMessage("no estas conectado a un canal de voz de " + this.textChannel.getGuild().getName() + " >:(").queue();
             return;
         }
+
         this.textChannel.sendMessage("canal seleccionado: " + voiceChannel.getName()
                 + "\nanfitrion: " + host.getName()
-        ).queue();
-        sentMessage = findLastMessageBySelf(this.textChannel);
-        sentMessage.addReaction(crossCodepoint).complete();
-        sentMessage.addReaction(muteCodepoint).complete();
+        ).queue(message -> {
+            message.addReaction(crossCodepoint).queue();
+            message.addReaction(muteCodepoint).queue();
+            sentMessage = message;
+        });
 
         rl = new ReactionListener();
         jda.addEventListener(rl);
