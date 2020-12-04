@@ -43,10 +43,10 @@ public class SimpleCommandsListener extends ListenerAdapter {
                     break;
 
                 case "proposal":
-                    String request = command.substring(args[0].length());
+                    String proposal = command.substring(args[0].length());
                     User author = msg.getAuthor();
                     embed = new EmbedBuilder()
-                            .setDescription(request)
+                            .setDescription(proposal)
                             .setTimestamp(new Date().toInstant())
                             .setAuthor(author.getName(), null, author.getAvatarUrl())
                             .build();

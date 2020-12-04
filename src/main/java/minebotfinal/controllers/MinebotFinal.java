@@ -1,10 +1,7 @@
 package minebotfinal.controllers;
 
 
-import minebotfinal.controllers.actionlisteners.MinecraftersActionListener;
-import minebotfinal.controllers.commands.amongus.AmongUsListener;
-import minebotfinal.controllers.commands.ruleta.RuletaListener;
-import minebotfinal.controllers.commands.simple.SimpleCommandsListener;
+import minebotfinal.controllers.commands.poll.PollListener;
 import minebotfinal.controllers.console.ConsoleInputListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -39,10 +36,7 @@ public class MinebotFinal {
             prefix = config.get("prefix").toString();
 
             jda = JDABuilder.createDefault(token)
-                    .addEventListeners(new SimpleCommandsListener(prefix))
-                    .addEventListeners(new RuletaListener(prefix))
-                    .addEventListeners(new AmongUsListener(prefix))
-                    .addEventListeners(new MinecraftersActionListener())
+                    .addEventListeners(new PollListener(prefix))
                     .setActivity(Activity.listening(prefix + "help"))
                     .build();
             jda.awaitReady();
