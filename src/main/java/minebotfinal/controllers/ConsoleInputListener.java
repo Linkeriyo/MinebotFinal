@@ -1,4 +1,4 @@
-package minebotfinal.controllers.console;
+package minebotfinal.controllers;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
