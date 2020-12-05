@@ -39,9 +39,6 @@ public class MinebotFinal {
             prefix = config.get("prefix").toString();
 
             jda = JDABuilder.createDefault(token)
-                    .addEventListeners(new AmongUsListener(prefix))
-                    .addEventListeners(new RuletaListener(prefix))
-                    .addEventListeners(new SimpleCommandsListener(prefix))
                     .addEventListeners(new PollListener(prefix))
                     .setActivity(Activity.listening(prefix + "help"))
                     .build();
