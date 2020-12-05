@@ -1,4 +1,4 @@
-package minebotfinal.controllers.commands.simple;
+package minebotfinal.controllers.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;

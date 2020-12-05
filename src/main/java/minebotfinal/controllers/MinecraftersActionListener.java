@@ -1,4 +1,4 @@
-package minebotfinal.controllers.actionlisteners;
+package minebotfinal.controllers;
 
 import minebotfinal.controllers.MinebotFinal;
 import net.dv8tion.jda.api.JDA;

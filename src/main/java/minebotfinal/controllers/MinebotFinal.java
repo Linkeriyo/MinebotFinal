@@ -1,10 +1,7 @@
 package minebotfinal.controllers;
 
 
-import minebotfinal.controllers.commands.amongus.AmongUsListener;
-import minebotfinal.controllers.commands.poll.PollListener;
-import minebotfinal.controllers.commands.ruleta.RuletaListener;
-import minebotfinal.controllers.commands.simple.SimpleCommandsListener;
+import minebotfinal.controllers.commands.PollListener;
 import minebotfinal.controllers.console.ConsoleInputListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

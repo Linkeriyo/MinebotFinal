@@ -1,4 +1,4 @@
-package minebotfinal.controllers.commands.poll;
+package minebotfinal.controllers.commands;
 
 import minebotfinal.controllers.StringSplitter;
 import net.dv8tion.jda.api.EmbedBuilder;

@@ -1,4 +1,4 @@
-package minebotfinal.controllers.commands.ruleta;
+package minebotfinal.controllers.commands;
 
 import minebotfinal.controllers.MinebotFinal;
 import net.dv8tion.jda.api.JDA;
