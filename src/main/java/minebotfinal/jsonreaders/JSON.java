@@ -12,7 +12,7 @@ public class JSON {
      * @throws IOException
      */
     static public String readJson(String path) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+        BufferedReader br = new BufferedReader(new FileReader(path));
         String content = "", line;
 
         while ((line = br.readLine()) != null) {

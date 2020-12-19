@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+
 public class AmongUsListener extends ListenerAdapter {
 
     String prefix;
@@ -21,9 +23,13 @@ public class AmongUsListener extends ListenerAdapter {
 
         Message msg = event.getMessage();
         if (event.getMessage().getContentRaw().startsWith(prefix + "amongus")) {
-            try {
-                new AmongUsMuter(msg).run();
-            } catch (PermissionException | ServerExclusiveCommandException ignored) {
+            if (!AmongUsMuter.isRunning()) {
+                try {
+                    new AmongUsMuter(msg).run();
+                } catch (PermissionException | ServerExclusiveCommandException ignored) {
+                }
+            } else {
+                msg.getChannel().sendMessage("alguien ya está utilizando este comando").queue();
             }
         }
     }

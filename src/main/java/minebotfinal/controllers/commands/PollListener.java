@@ -1,5 +1,6 @@
 package minebotfinal.controllers.commands;
 
+import minebotfinal.controllers.NumberEmojis;
 import minebotfinal.controllers.StringSplitter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -36,17 +37,17 @@ public class PollListener extends ListenerAdapter {
                     .setTimestamp(new Date().toInstant())
                     .setAuthor(author.getName(), null, author.getAvatarUrl());
 
-            for (int i = 0; i < options.size(); i++) {
-                embedBuilder.addField("opción " + (i + 1), options.get(i), true);
+            for (int i = 0; i < options.size() && i < 9; i++) {
+                embedBuilder.addField(NumberEmojis.getNumberEmoji(i + 1) + options.get(i), "", false);
             }
 
             MessageEmbed embed = embedBuilder.build();
 
 
-            //TODO: añadir reacción por cada una de las opciones
+            //TODO: añadir reacción por cada una de las opciones VA MAL
             msg.getTextChannel().sendMessage(embed).queue(message -> {
-                for (int i = 0; i < options.size(); i++) {
-                    message.addReaction((i+1) + "??").queue();
+                for (int i = 0; i < options.size() && i < 9; i++) {
+                    message.addReaction("<" + NumberEmojis.getNumberEmoji(i + 1).get(0) + ">").queue();
                 }
             });
         }

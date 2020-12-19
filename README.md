@@ -13,5 +13,5 @@ un poco de comprensión, aún me estoy desarrollando
 > among us \
 > **solo carepichas y og carepichas**
 
-#### \<prefix> request
+#### \<prefix> proposal
 > envia una propuesta a linkeriyo, usad esto porfa

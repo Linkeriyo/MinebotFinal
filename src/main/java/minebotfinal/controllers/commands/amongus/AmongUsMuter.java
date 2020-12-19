@@ -23,6 +23,11 @@ public class AmongUsMuter extends Command implements Runnable {
     VoiceChannel voiceChannel;
     JDA jda;
     ReactionListener rl;
+    private static boolean isRunning = false;
+
+    public static boolean isRunning() {
+        return isRunning;
+    }
 
     public AmongUsMuter(Message receivedMessage) throws NullPointerException, PermissionException, ServerExclusiveCommandException {
         // Command exclusive variables.
@@ -79,7 +84,7 @@ public class AmongUsMuter extends Command implements Runnable {
                 reaction.removeReaction(evt.getUser()).queue();
 
                 // Finalize among us mode.
-                if (emote.getAsCodepoints().toUpperCase().equals(crossCodepoint)) {
+                if (emote.getAsCodepoints().equalsIgnoreCase(crossCodepoint)) {
                     unmuteAllInChannel();
                     jda.removeEventListener(rl);
                     sentMessage.delete().queue();
@@ -126,20 +131,28 @@ public class AmongUsMuter extends Command implements Runnable {
 
     @Override
     public void run() {
-        if (voiceChannel == null) {
-            this.textChannel.sendMessage("no estas conectado a un canal de voz de " + this.textChannel.getGuild().getName() + " >:(").queue();
-            return;
+        try {
+            isRunning = true;
+
+            if (voiceChannel == null) {
+                this.textChannel.sendMessage("no estas conectado a un canal de voz de " + this.textChannel.getGuild().getName() + " >:(").queue();
+                return;
+            }
+
+            this.textChannel.sendMessage("canal seleccionado: " + voiceChannel.getName()
+                    + "\nanfitrion: " + host.getName()
+            ).queue(message -> {
+                message.addReaction(crossCodepoint).queue();
+                message.addReaction(muteCodepoint).queue();
+                sentMessage = message;
+            });
+
+            rl = new ReactionListener();
+            jda.addEventListener(rl);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            isRunning = false;
         }
-
-        this.textChannel.sendMessage("canal seleccionado: " + voiceChannel.getName()
-                + "\nanfitrion: " + host.getName()
-        ).queue(message -> {
-            message.addReaction(crossCodepoint).queue();
-            message.addReaction(muteCodepoint).queue();
-            sentMessage = message;
-        });
-
-        rl = new ReactionListener();
-        jda.addEventListener(rl);
     }
 }

@@ -2,11 +2,13 @@ package minebotfinal.controllers;
 
 
 import minebotfinal.controllers.commands.PollListener;
-import minebotfinal.controllers.console.ConsoleInputListener;
+import minebotfinal.controllers.commands.amongus.AmongUsListener;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import org.json.JSONObject;
 
@@ -36,6 +38,7 @@ public class MinebotFinal {
             prefix = config.get("prefix").toString();
 
             jda = JDABuilder.createDefault(token)
+                    .addEventListeners(new AmongUsListener(prefix))
                     .addEventListeners(new PollListener(prefix))
                     .setActivity(Activity.listening(prefix + "help"))
                     .build();

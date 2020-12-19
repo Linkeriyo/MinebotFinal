@@ -17,7 +17,7 @@ public abstract class Command {
     protected Guild currentGuild;
 
     /**
-     * Checks if the bot has the required permission for this command.
+     * Checks if the bot has the required permissions for this command.
      *
      * @return permissions needed that the bot lacks.
      */
