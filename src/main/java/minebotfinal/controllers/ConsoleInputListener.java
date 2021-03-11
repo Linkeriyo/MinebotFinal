@@ -25,6 +25,7 @@ public class ConsoleInputListener implements Runnable {
 
             if (input.equals("quit")) {
                 System.err.println("Closing the bot...");
+                jda.shutdown();
                 System.exit(0);
             }
 

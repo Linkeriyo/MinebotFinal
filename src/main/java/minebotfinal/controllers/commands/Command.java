@@ -30,7 +30,6 @@ public abstract class Command {
                 toReturn.add(perm);
             }
         }
-
         return toReturn;
     }
 

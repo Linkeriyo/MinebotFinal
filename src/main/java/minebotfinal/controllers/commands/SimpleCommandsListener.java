@@ -8,6 +8,9 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.Date;
 
 public class SimpleCommandsListener extends ListenerAdapter {
@@ -71,6 +74,16 @@ public class SimpleCommandsListener extends ListenerAdapter {
                             .build();
 
                     msg.getChannel().sendMessage(embed).queue();
+                    break;
+
+                case "calc":
+                    String expression = command.substring(args[0].length());
+                    ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+                    try {
+                        msg.reply(String.valueOf(engine.eval(expression))).queue();
+                    } catch (ScriptException e) {
+                        msg.reply(e.getMessage()).queue();
+                    }
             }
         }
     }
